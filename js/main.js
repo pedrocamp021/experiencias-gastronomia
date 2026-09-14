@@ -100,42 +100,47 @@ window.addEventListener('scroll', () => {
   const ua = navigator.userAgent || '';
   const androidDevice = /Android/i.test(ua);
   const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const useAndroidFrames = androidDevice && typeof FRAMES_ANDROID !== 'undefined';
+  const useAndroidFrames = androidDevice && typeof SPRITE !== 'undefined';
 
-  // ANDROID: caminho de frames JPEG (troca de <img>, sem decodificador de vídeo)
-  if (useAndroidFrames) {
-    (function androidFrames() {
+  // ANDROID: caminho de SPRITE SHEET — 6 imagens grandes em vez de 96 requests
+  if (useAndroidFrames && typeof SPRITE !== 'undefined') {
+    (function androidSprite() {
       const stage = document.createElement('div');
       stage.className = 'hero__video-el is-loaded';
-      stage.style.cssText = 'background-size:cover;background-position:center;';
       video.parentNode.insertBefore(stage, video);
       video.style.display = 'none';
       if (fallback) fallback.style.display = 'none';
-      const FRAMES = FRAMES_ANDROID;
-      const TOTAL = FRAMES.length;
+
+      const { files, cols, rows, per, total } = SPRITE;
+      const fw = 360, fh = 720;
+      // pré-carrega as 6 sheets (3.4MB total, 6 requests só)
+      const sheets = files.map(f => { const im = new Image(); im.src = f; return im; });
+      let readyCount = 0;
+      sheets.forEach(im => {
+        if (im.complete) readyCount++;
+        else im.onload = im.onerror = () => { readyCount++; };
+      });
+
       let shown = -1;
-      let loaded = 1;
-      const pre = new Image();
-      pre.onload = () => { stage.style.backgroundImage = 'url(' + FRAMES[0] + ')'; chain(1); };
-      pre.src = FRAMES[0];
-      function chain(i) {
-        if (i >= TOTAL) return;
-        const img = new Image();
-        img.onload = () => { loaded++; chain(i + 1); };
-        img.onerror = () => chain(i + 1);
-        img.src = FRAMES[i];
-      }
       function updateA() {
         const rect = hero.getBoundingClientRect();
-        const total = hero.offsetHeight - window.innerHeight;
-        const progress = Math.min(1, Math.max(0, -rect.top / total));
-        const idx = Math.round(progress * (TOTAL - 1));
-        const maxReady = Math.max(0, loaded - 1);
-        const i = Math.min(idx, maxReady);
-        if (i !== shown) {
-          shown = i;
-          stage.style.backgroundImage = 'url(' + FRAMES[i] + ')';
+        const totalH = hero.offsetHeight - window.innerHeight;
+        const progress = Math.min(1, Math.max(0, -rect.top / totalH));
+        const idx = Math.round(progress * (total - 1));
+        if (idx === shown) return;
+        // só exibe se a sheet desse frame já carregou (evita pulo branco)
+        const sheetIdx = Math.floor(idx / per);
+        if (!sheets[sheetIdx].complete && !sheets[sheetIdx].naturalWidth) {
+          // tenta o frame mais próximo já disponível
+          return;
         }
+        shown = idx;
+        const local = idx % per;
+        const col = local % cols;
+        const row = Math.floor(local / cols);
+        stage.style.backgroundImage = 'url(' + files[sheetIdx] + ')';
+        stage.style.backgroundSize = (cols * 100) + '% ' + (rows * 100) + '%';
+        stage.style.backgroundPosition = (cols > 1 ? (col / (cols - 1)) * 100 : 0) + '% ' + (rows > 1 ? (row / (rows - 1)) * 100 : 0) + '%';
       }
       window.__frameUpdate = updateA;
       window.addEventListener('scroll', updateA, { passive: true });
