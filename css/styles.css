@@ -288,10 +288,13 @@ section, header, footer { position: relative; z-index: 1; }
     border: 1px solid rgba(255,255,255,0.35);
     border-radius: 18px;
     box-shadow: 0 10px 30px rgba(30,25,40,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
-    padding: 24px 24px;
-    max-width: min(92vw, 420px) !important; /* largo de verdade: texto distribui em menos linhas */
-    font-size: 18px; /* texto levemente menor = melhor distribuição */
+    padding: 24px 18px;
+    /* alarga de verdade: sobrescreve o 330px do desktop com folga */
+    width: calc(100vw - 36px) !important;
+    max-width: calc(100vw - 36px) !important;
+    box-sizing: border-box;
   }
+  .hero__cap[data-step="0"] p { font-size: 17.5px; }
   .hero__cap[data-step="0"].is-active { transform: translate(-50%, -50%) scale(1); }
   .hero__cap[data-step="0"] .hero__cap-tag { margin-bottom: 12px; }
   .hero__cap[data-step="1"] { top: 16vh; left: auto; right: 16px; text-align: right; }  /* cima-direita */
