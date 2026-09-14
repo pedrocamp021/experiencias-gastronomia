@@ -95,12 +95,61 @@ window.addEventListener('scroll', () => {
   const fallback = document.getElementById('heroVideoFallback');
   if (!hero || !video) return;
 
-  // escolhe o vídeo: mobile (<= 720px) usa o vertical, PC o horizontal
-  const isMobile = window.matchMedia('(max-width: 720px)').matches;
-  const src = isMobile ? 'video/hero-mobile-opt.mp4' : 'video/hero-desktop-opt.mp4';
+  // Detecção de plataforma: Android não faz seek de vídeo por hardware confiável
+  // (currentTime engasga). iPhone/PC têm decodificador dedicado e mantêm o vídeo.
+  const ua = navigator.userAgent || '';
+  const androidDevice = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const useAndroidFrames = androidDevice && typeof FRAMES_ANDROID !== 'undefined';
+
+  // ANDROID: caminho de frames JPEG (troca de <img>, sem decodificador de vídeo)
+  if (useAndroidFrames) {
+    (function androidFrames() {
+      const stage = document.createElement('div');
+      stage.className = 'hero__video-el is-loaded';
+      stage.style.cssText = 'background-size:cover;background-position:center;';
+      video.parentNode.insertBefore(stage, video);
+      video.style.display = 'none';
+      if (fallback) fallback.style.display = 'none';
+      const FRAMES = FRAMES_ANDROID;
+      const TOTAL = FRAMES.length;
+      let shown = -1;
+      let loaded = 1;
+      const pre = new Image();
+      pre.onload = () => { stage.style.backgroundImage = 'url(' + FRAMES[0] + ')'; chain(1); };
+      pre.src = FRAMES[0];
+      function chain(i) {
+        if (i >= TOTAL) return;
+        const img = new Image();
+        img.onload = () => { loaded++; chain(i + 1); };
+        img.onerror = () => chain(i + 1);
+        img.src = FRAMES[i];
+      }
+      function updateA() {
+        const rect = hero.getBoundingClientRect();
+        const total = hero.offsetHeight - window.innerHeight;
+        const progress = Math.min(1, Math.max(0, -rect.top / total));
+        const idx = Math.round(progress * (TOTAL - 1));
+        const maxReady = Math.max(0, loaded - 1);
+        const i = Math.min(idx, maxReady);
+        if (i !== shown) {
+          shown = i;
+          stage.style.backgroundImage = 'url(' + FRAMES[i] + ')';
+        }
+      }
+      window.__frameUpdate = updateA;
+      window.addEventListener('scroll', updateA, { passive: true });
+      window.addEventListener('resize', updateA);
+      updateA();
+    })();
+    return; // não inicializa o caminho de vídeo
+  }
+
+  // iPhone / PC: vídeo scrubbed (qualidade máxima)
+  const src = isIOS ? 'video/hero-mobile-opt.mp4' : 'video/hero-desktop-opt.mp4';
   // poster por dispositivo: primeiro frame já visível enquanto o vídeo prepara
   if (video.dataset.posterDesktop) {
-    video.poster = isMobile ? video.dataset.posterMobile : video.dataset.posterDesktop;
+    video.poster = isIOS ? video.dataset.posterMobile : video.dataset.posterDesktop;
   }
   video.src = src;
 
