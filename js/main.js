@@ -113,8 +113,9 @@ window.addEventListener('scroll', () => {
 
       const { files, cols, rows, per, total } = SPRITE;
       const fw = 360, fh = 720;
-      // pré-carrega as 6 sheets (3.4MB total, 6 requests só)
-      const sheets = files.map(f => { const im = new Image(); im.src = f; return im; });
+      // pré-carrega TODAS as sheets em paralelo (não em fila) — o final da anima-
+      // ção (sheets 03-05) fica disponível junto com o começo, sem travar o fim
+      const sheets = files.map(f => { const im = new Image(); im.decoding = 'async'; im.fetchPriority = 'high'; im.src = f; return im; });
       let readyCount = 0;
       sheets.forEach(im => {
         if (im.complete) readyCount++;
