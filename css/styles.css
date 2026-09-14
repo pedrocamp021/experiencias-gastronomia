@@ -270,7 +270,20 @@ section, header, footer { position: relative; z-index: 1; }
   }
   .hero__cap.is-active { transform: translateY(0) scale(1); }
   /* 4 cantos, evitando o centro (pouso do pássaro) */
-  .hero__cap[data-step="0"] { top: 50%; left: 50%; right: auto; bottom: auto; transform: translate(-50%, -50%) scale(0.96); text-align: center; }  /* centro (abertura) */
+  .hero__cap[data-step="0"] {
+    top: 50%; left: 50%; right: auto; bottom: auto;
+    transform: translate(-50%, -50%) scale(0.96);
+    text-align: center;
+    /* title card: liquid glass sutil pra destacar a capa */
+    background: linear-gradient(135deg, rgba(106,144,115,0.30) 0%, rgba(106,144,115,0.16) 50%, rgba(251,249,242,0.14) 100%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    backdrop-filter: blur(14px) saturate(150%);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(30,25,40,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
+    padding: 26px 22px;
+    max-width: min(82vw, 340px);
+  }
   .hero__cap[data-step="0"].is-active { transform: translate(-50%, -50%) scale(1); }
   .hero__cap[data-step="0"] .hero__cap-tag { margin-bottom: 12px; }
   .hero__cap[data-step="1"] { top: 16vh; left: auto; right: 16px; text-align: right; }  /* cima-direita */
