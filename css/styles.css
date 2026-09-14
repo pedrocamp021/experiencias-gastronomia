@@ -152,11 +152,15 @@ section, header, footer { position: relative; z-index: 1; }
 }
 .hero__video {
   position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
+  /* container nunca encolhe: barra de endereço dinâmica revela, nunca puxa */
+  min-height: 100svh;
   background: var(--bg-sage);
 }
 .hero__video-el {
   position: absolute; inset: 0; width: 100%; height: 100%;
-  object-fit: cover; opacity: 0; transition: opacity 0.6s;
+  object-fit: cover;
+  object-position: center top; /* âncora no topo: barra de endereço encolhendo não "puxa" o vídeo */
+  opacity: 0; transition: opacity 0.6s;
 }
 .hero__video-el.is-loaded { opacity: 1; }
 .hero__video-fallback {
@@ -266,7 +270,9 @@ section, header, footer { position: relative; z-index: 1; }
   }
   .hero__cap.is-active { transform: translateY(0) scale(1); }
   /* 4 cantos, evitando o centro (pouso do pássaro) */
-  .hero__cap[data-step="0"] { top: 14vh; left: 16px; right: auto; }        /* cima-esquerda */
+  .hero__cap[data-step="0"] { top: 50%; left: 50%; right: auto; bottom: auto; transform: translate(-50%, -50%) scale(0.96); text-align: center; }  /* centro (abertura) */
+  .hero__cap[data-step="0"].is-active { transform: translate(-50%, -50%) scale(1); }
+  .hero__cap[data-step="0"] .hero__cap-tag { margin-bottom: 12px; }
   .hero__cap[data-step="1"] { top: 16vh; left: auto; right: 16px; text-align: right; }  /* cima-direita */
   .hero__cap[data-step="2"] { bottom: 15vh; left: 16px; top: auto; right: auto; }       /* baixo-esquerda */
   .hero__cap[data-step="3"] { bottom: 13vh; left: auto; right: 16px; top: auto; text-align: right; } /* baixo-direita */
