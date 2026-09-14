@@ -49,7 +49,13 @@ window.addEventListener('scroll', () => {
     const progress = Math.min(1, Math.max(0, -rect.top / total));
     const idx = Math.min(caps.length - 1, Math.floor(progress * caps.length * 0.999));
     if (idx !== current) {
-      caps.forEach((c, i) => c.classList.toggle('is-active', i === idx));
+      // dissolve: o bloco que sai ganha is-leaving (blur+fade) antes de sumir
+      caps.forEach((c, i) => {
+        c.classList.toggle('is-active', i === idx);
+        c.classList.toggle('is-leaving', i === current && i !== idx);
+      });
+      const prev = caps[current];
+      if (prev) setTimeout(() => prev.classList.remove('is-leaving'), 520);
       current = idx;
       if (idx === caps.length - 1 && typeof window.fbq === 'function') {
         window.fbq('track', 'ViewContent', { content_name: 'Hero final CTA' });
