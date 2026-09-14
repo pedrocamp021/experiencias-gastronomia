@@ -249,25 +249,27 @@ section, header, footer { position: relative; z-index: 1; }
 }
 .hero__cap .btn { margin-top: 12px; }
 
-/* ===== MOBILE: legendas estilo "filme" — texto direto no vídeo, sem bloco ===== */
+/* ===== MOBILE: legendas estilo "filme" — texto direto no vídeo, cantos alternados ===== */
 @media (max-width: 720px) {
   .hero__cap {
     /* sem papel, sem máscara de rasgado: legenda pura sobre o vídeo */
-    max-width: min(86vw, 340px);
-    top: auto; bottom: clamp(56px, 12vh, 96px);
+    max-width: min(72vw, 320px);
+    top: auto; bottom: auto;
     padding: 0;
     background: transparent !important;
     -webkit-mask-image: none !important;
     mask-image: none !important;
     filter: none;
     box-shadow: none;
-    text-align: center;
-    left: 50% !important;
-    right: auto !important;
-    transform: translate(-50%, 14px) scale(0.96);
+    text-align: left;
+    transform: translateY(14px) scale(0.96);
   }
-  .hero__cap.is-active { transform: translate(-50%, 0) scale(1); }
-  /* centraliza os filhos (tag + texto) */
+  .hero__cap.is-active { transform: translateY(0) scale(1); }
+  /* 4 cantos, evitando o centro (pouso do pássaro) */
+  .hero__cap[data-step="0"] { top: 14vh; left: 16px; right: auto; }        /* cima-esquerda */
+  .hero__cap[data-step="1"] { top: 16vh; left: auto; right: 16px; text-align: right; }  /* cima-direita */
+  .hero__cap[data-step="2"] { bottom: 15vh; left: 16px; top: auto; right: auto; }       /* baixo-esquerda */
+  .hero__cap[data-step="3"] { bottom: 13vh; left: auto; right: 16px; top: auto; text-align: right; } /* baixo-direita */
   .hero__cap-tag {
     font-size: 13px;
     text-shadow: 0 1px 3px rgba(30,25,40,0.6);
@@ -283,11 +285,12 @@ section, header, footer { position: relative; z-index: 1; }
       0 2px 16px rgba(30,25,40,0.5);
   }
   .hero__cap p em {
-    color: #C8E6A0; /* verde claro brilha sobre vídeo escurecido */
+    color: #C8E6A0;
     text-shadow:
       0 1px 2px rgba(30,25,40,0.9),
       0 0 10px rgba(30,25,40,0.7);
   }
+  .hero__cap .btn { font-size: 16px; padding: 11px 20px; }
 }
 
 /* ============ SEÇÕES ============ */
