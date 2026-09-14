@@ -257,7 +257,7 @@ section, header, footer { position: relative; z-index: 1; }
 @media (max-width: 720px) {
   .hero__cap {
     /* sem papel, sem máscara de rasgado: legenda pura sobre o vídeo */
-    max-width: min(72vw, 320px);
+    max-width: min(78vw, 340px);
     top: auto; bottom: auto;
     padding: 0;
     background: transparent !important;
@@ -288,8 +288,9 @@ section, header, footer { position: relative; z-index: 1; }
     border: 1px solid rgba(255,255,255,0.35);
     border-radius: 18px;
     box-shadow: 0 10px 30px rgba(30,25,40,0.25), inset 0 1px 0 rgba(255,255,255,0.4);
-    padding: 26px 26px;
-    max-width: min(90vw, 400px); /* mais largo = texto respira, sem tocar as margens (16px de respiro) */
+    padding: 24px 24px;
+    max-width: min(92vw, 420px) !important; /* largo de verdade: texto distribui em menos linhas */
+    font-size: 18px; /* texto levemente menor = melhor distribuição */
   }
   .hero__cap[data-step="0"].is-active { transform: translate(-50%, -50%) scale(1); }
   .hero__cap[data-step="0"] .hero__cap-tag { margin-bottom: 12px; }
