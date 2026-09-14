@@ -78,69 +78,58 @@ window.addEventListener('scroll', () => {
 })();
 
 /* ============================================================
-   HERO — SCROLL MOTION (frame sequence scrubbed pelo scroll)
-   48 frames do vídeo mapeados na altura da hero (400vh).
-   O scroll "dá play" no vídeo: cada px rolado avança frames.
-   Pré-carrega progressivamente; começa assim que o 1º frame chega.
+   HERO — SCROLL MOTION (vídeo rebobinado pelo scroll)
+   Técnica Apple-style: um único <video> e o scroll define o
+   currentTime. Sem centenas de requests — decodificação nativa,
+   streaming por partes (faststart), fluido em qualquer rede.
    ============================================================ */
 (function heroScrollMotion() {
   const hero = document.getElementById('hero');
-  const stage = document.getElementById('heroFrames');
+  const video = document.getElementById('heroVideoEl');
   const fallback = document.getElementById('heroVideoFallback');
-  // escolhe o conjunto: mobile (<= 720px) usa frames verticais, PC usa horizontais
+  if (!hero || !video) return;
+
+  // escolhe o vídeo: mobile (<= 720px) usa o vertical, PC o horizontal
   const isMobile = window.matchMedia('(max-width: 720px)').matches;
-  const FRAMES_SET = (isMobile && typeof FRAMES_MOBILE !== 'undefined') ? FRAMES_MOBILE : FRAMES;
-  if (!hero || !stage || typeof FRAMES_SET === 'undefined' || FRAMES_SET.length === 0) return;
+  const src = isMobile ? 'video/hero-mobile-opt.mp4' : 'video/hero-desktop-opt.mp4';
+  video.src = src;
 
-  // imagem oculta que recebe os frames (o stage pinta como background)
-  const loader = new Image();
-  loader.className = 'hero__pre';
-  loader.alt = '';
-  stage.appendChild(loader);
+  let ready = false;
+  let duration = 0;
+  let lastTime = -1;
 
-  const TOTAL = FRAMES_SET.length;
-  let loaded = 0;
-  let shownIdx = -1;
+  video.addEventListener('loadedmetadata', () => {
+    duration = video.duration;
+    ready = true;
+    video.pause();
+  }, { once: true });
 
-  function show(i) {
-    if (i === shownIdx || i < 0 || i >= TOTAL) return;
-    shownIdx = i;
-    loader.src = FRAMES_SET[i];
-    if (fallback && fallback.style.display !== 'none') {
-      fallback.style.display = 'none';
-    }
-  }
+  video.addEventListener('loadeddata', () => {
+    video.classList.add('is-loaded');
+    if (fallback) fallback.style.display = 'none';
+  }, { once: true });
 
-  // pré-carga progressiva: primeiro frame já habilita a hero
-  function preloadFrom(i) {
-    if (i >= TOTAL) return;
-    const img = new Image();
-    img.onload = () => { loaded++; preloadFrom(i + 1); };
-    img.onerror = () => preloadFrom(i + 1);
-    img.src = FRAMES_SET[i];
-  }
-  // frame 1 com prioridade
-  const first = new Image();
-  first.onload = () => { loaded++; update(); preloadFrom(1); };
-  first.src = FRAMES[0];
+  // segurança: alguns navegadores tentam tocar; mantemos pausado sempre
+  video.addEventListener('play', () => { try { video.pause(); } catch (e) {} });
 
   function update() {
+    if (!ready || !duration) return;
     const rect = hero.getBoundingClientRect();
     const total = hero.offsetHeight - window.innerHeight;
     const progress = Math.min(1, Math.max(0, -rect.top / total));
-    // scrub 1:1 — o frame acompanha o scroll diretamente
-    const idx = Math.round(progress * (TOTAL - 1));
-    const maxReady = Math.max(0, loaded - 1);
-    show(Math.min(idx, maxReady));
+    // pequena folga no fim pra garantir que o último frame apareça
+    const t = Math.min(duration - 0.05, progress * duration);
+    // só seta se mudou o suficiente (evita decode spam)
+    if (Math.abs(t - lastTime) > 0.02) {
+      lastTime = t;
+      try { video.currentTime = t; } catch (e) {}
+    }
   }
 
-  window.__frameUpdate = update; // rAF loop compartilhado
+  window.__frameUpdate = update;
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
   window.addEventListener('load', update);
-  // re-renderiza conforme frames chegam
-  const tick = setInterval(() => { update(); if (loaded >= TOTAL) clearInterval(tick); }, 400);
-
   update();
 })();
 
