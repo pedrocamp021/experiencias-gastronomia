@@ -92,22 +92,42 @@ window.addEventListener('scroll', () => {
   // escolhe o vídeo: mobile (<= 720px) usa o vertical, PC o horizontal
   const isMobile = window.matchMedia('(max-width: 720px)').matches;
   const src = isMobile ? 'video/hero-mobile-opt.mp4' : 'video/hero-desktop-opt.mp4';
+  // poster por dispositivo: primeiro frame já visível enquanto o vídeo prepara
+  if (video.dataset.posterDesktop) {
+    video.poster = isMobile ? video.dataset.posterMobile : video.dataset.posterDesktop;
+  }
   video.src = src;
 
   let ready = false;
   let duration = 0;
   let lastTime = -1;
+  // iOS/Safari: com preload="auto" o carregamento dos dados só acontece
+  // depois de chamar load() explicitamente e ter interação/visibilidade.
+  video.load();
+
+  // destrava o carregamento no iOS: o primeiro touch/clique chama load()+scrub
+  function unlock() {
+    video.load();
+    update();
+    window.removeEventListener('touchstart', unlock);
+    window.removeEventListener('click', unlock);
+  }
+  window.addEventListener('touchstart', unlock, { once: true, passive: true });
+  window.addEventListener('click', unlock, { once: true });
 
   video.addEventListener('loadedmetadata', () => {
     duration = video.duration;
     ready = true;
     video.pause();
-  }, { once: true });
-
+    update();
+  });
   video.addEventListener('loadeddata', () => {
     video.classList.add('is-loaded');
     if (fallback) fallback.style.display = 'none';
-  }, { once: true });
+  });
+  video.addEventListener('error', () => {
+    console.warn('[Hero] vídeo falhou ao carregar:', video.error && video.error.code);
+  });
 
   // segurança: alguns navegadores tentam tocar; mantemos pausado sempre
   video.addEventListener('play', () => { try { video.pause(); } catch (e) {} });
@@ -119,8 +139,7 @@ window.addEventListener('scroll', () => {
     const progress = Math.min(1, Math.max(0, -rect.top / total));
     // pequena folga no fim pra garantir que o último frame apareça
     const t = Math.min(duration - 0.05, progress * duration);
-    // só seta se mudou o suficiente (evita decode spam)
-    if (Math.abs(t - lastTime) > 0.02) {
+    if (Math.abs(t - lastTime) > 0.015) {
       lastTime = t;
       try { video.currentTime = t; } catch (e) {}
     }
@@ -129,7 +148,10 @@ window.addEventListener('scroll', () => {
   window.__frameUpdate = update;
   window.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
+  window.addEventListener('orientationchange', () => setTimeout(update, 300));
   window.addEventListener('load', update);
+  // polling de segurança enquanto o vídeo prepara
+  const boot = setInterval(() => { update(); if (ready) clearInterval(boot); }, 500);
   update();
 })();
 
