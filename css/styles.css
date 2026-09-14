@@ -249,16 +249,45 @@ section, header, footer { position: relative; z-index: 1; }
 }
 .hero__cap .btn { margin-top: 12px; }
 
+/* ===== MOBILE: legendas estilo "filme" — texto direto no vídeo, sem bloco ===== */
 @media (max-width: 720px) {
   .hero__cap {
-    max-width: min(78vw, 300px);
-    top: auto; bottom: clamp(70px, 14vh, 110px);
-    transform: translateY(0) scale(0.96);
+    /* sem papel, sem máscara de rasgado: legenda pura sobre o vídeo */
+    max-width: min(86vw, 340px);
+    top: auto; bottom: clamp(56px, 12vh, 96px);
+    padding: 0;
+    background: transparent !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    filter: none;
+    box-shadow: none;
+    text-align: center;
+    left: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, 14px) scale(0.96);
   }
-  .hero__cap.is-active { transform: translateY(0) scale(1); }
-  .hero__cap[data-step="0"], .hero__cap[data-step="2"] { left: 16px; }
-  .hero__cap[data-step="1"], .hero__cap[data-step="3"] { right: 16px; }
-  .hero__cap p { font-size: 17px; }
+  .hero__cap.is-active { transform: translate(-50%, 0) scale(1); }
+  /* centraliza os filhos (tag + texto) */
+  .hero__cap-tag {
+    font-size: 13px;
+    text-shadow: 0 1px 3px rgba(30,25,40,0.6);
+  }
+  .hero__cap p {
+    font-size: 19px;
+    line-height: 1.4;
+    color: #FFFDF5;
+    /* destaque estilo legenda de cinema: sombra dura + halo duplo */
+    text-shadow:
+      0 1px 2px rgba(30,25,40,0.9),
+      0 0 8px rgba(30,25,40,0.65),
+      0 2px 16px rgba(30,25,40,0.5);
+  }
+  .hero__cap p em {
+    color: #C8E6A0; /* verde claro brilha sobre vídeo escurecido */
+    text-shadow:
+      0 1px 2px rgba(30,25,40,0.9),
+      0 0 10px rgba(30,25,40,0.7);
+  }
 }
 
 /* ============ SEÇÕES ============ */
