@@ -182,24 +182,25 @@ section, header, footer { position: relative; z-index: 1; }
 }
 /* ---- transição suave hero → seção de baixo (vinheta esfumaçada) ---- */
 .hero__fade {
-  position: absolute; left: 0; right: 0; bottom: -1px; height: 22vh;
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 30vh;
   pointer-events: none;
   z-index: 4;
   background: linear-gradient(180deg,
     rgba(239,237,228,0) 0%,
-    rgba(239,237,228,0.12) 45%,
-    rgba(239,237,228,0.45) 78%,
-    rgba(239,237,228,0.92) 100%);
+    rgba(239,237,228,0.18) 40%,
+    rgba(239,237,228,0.55) 70%,
+    rgba(239,237,228,0.95) 92%,
+    var(--bg-paper) 100%); /* 100% opaco na borda = sem emenda */
 }
 .hero__fade::after {
   /* "fumaça" — nuvens suaves de creme subindo */
   content: '';
   position: absolute; inset: 0;
   background:
-    radial-gradient(60% 90% at 22% 100%, rgba(239,237,228,0.5), transparent 70%),
-    radial-gradient(50% 80% at 68% 100%, rgba(239,237,228,0.4), transparent 70%),
-    radial-gradient(45% 70% at 95% 100%, rgba(239,237,228,0.32), transparent 70%);
-  filter: blur(10px);
+    radial-gradient(70% 100% at 22% 100%, rgba(239,237,228,0.75), transparent 72%),
+    radial-gradient(60% 90% at 68% 100%, rgba(239,237,228,0.6), transparent 72%),
+    radial-gradient(55% 80% at 95% 100%, rgba(239,237,228,0.5), transparent 72%);
+  filter: blur(12px);
 }
 /* ---- legendas laterais (papel rasgado) ---- */
 .hero__captions {
