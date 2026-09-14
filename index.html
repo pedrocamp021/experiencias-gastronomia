@@ -165,35 +165,68 @@
     </div>
   </section>
 
-  <!-- ================= EMPRESAS ================= -->
+  <!-- ================= EMPRESAS (marquee em loop) ================= -->
   <section class="section section--empresas" id="empresas">
     <div class="container">
       <div class="section__head reveal">
         <span class="washi washi--lav">Quem confia</span>
         <h2 class="section__title">Empresas que já utilizam nossos serviços</h2>
+        <p class="section__lead">Mais de 20 empresas e organizações confiam nossas celebrações à nossa equipe — algumas há mais de 5 anos.</p>
       </div>
-      <div class="logos reveal">
-        <!-- TROCAR: cada div por <img src="img/logo-adsplay.png"> etc -->
-        <div class="logo__ph">ADSPLAY <small>+5 anos de parceria</small></div>
-        <div class="logo__ph">Bradesco</div>
-        <div class="logo__ph">Itaú</div>
-        <div class="logo__ph">Microsoft</div>
-        <div class="logo__ph">Cora</div>
-        <div class="logo__ph">Duratex</div>
-        <div class="logo__ph">iugu</div>
-        <div class="logo__ph">Grupo Boticário</div>
-        <div class="logo__ph">MOL Editora</div>
-        <div class="logo__ph">VivaDecora</div>
-        <div class="logo__ph">Spot</div>
-        <div class="logo__ph">Nortis</div>
-        <div class="logo__ph">Yuny</div>
-        <div class="logo__ph">Air</div>
-        <div class="logo__ph">Lima Consulting</div>
-        <div class="logo__ph">APPTA</div>
-        <div class="logo__ph">ICLEI</div>
-        <div class="logo__ph">Next Solution</div>
-        <div class="logo__ph">Parthenon</div>
-        <div class="logo__ph">OSC</div>
+    </div>
+    <div class="marquee reveal" aria-label="Empresas clientes">
+      <div class="marquee__track marquee__track--left">
+        <span class="logo logo--serif">ADSPLAY</span><span class="logo logo--sans">Bradesco</span><span class="logo logo--mono">Itaú</span><span class="logo logo--sans">Microsoft</span><span class="logo logo--serif">Cora</span><span class="logo logo--caps">DURATEX</span><span class="logo logo--sans">iugu</span><span class="logo logo--serif">Grupo Boticário</span><span class="logo logo--caps">MOL EDITORA</span>
+        <span class="logo logo--serif">ADSPLAY</span><span class="logo logo--sans">Bradesco</span><span class="logo logo--mono">Itaú</span><span class="logo logo--sans">Microsoft</span><span class="logo logo--serif">Cora</span><span class="logo logo--caps">DURATEX</span><span class="logo logo--sans">iugu</span><span class="logo logo--serif">Grupo Boticário</span><span class="logo logo--caps">MOL EDITORA</span>
+      </div>
+    </div>
+    <div class="marquee reveal" aria-hidden="true">
+      <div class="marquee__track marquee__track--right">
+        <span class="logo logo--sans">VivaDecora</span><span class="logo logo--mono">Spot</span><span class="logo logo--caps">NORTIS</span><span class="logo logo--serif">Yuny</span><span class="logo logo--sans">Air</span><span class="logo logo--serif">Lima Consulting</span><span class="logo logo--caps">APPTA</span><span class="logo logo--mono">ICLEI</span><span class="logo logo--sans">Next Solution</span><span class="logo logo--serif">Parthenon</span><span class="logo logo--caps">OSC</span>
+        <span class="logo logo--sans">VivaDecora</span><span class="logo logo--mono">Spot</span><span class="logo logo--caps">NORTIS</span><span class="logo logo--serif">Yuny</span><span class="logo logo--sans">Air</span><span class="logo logo--serif">Lima Consulting</span><span class="logo logo--caps">APPTA</span><span class="logo logo--mono">ICLEI</span><span class="logo logo--sans">Next Solution</span><span class="logo logo--serif">Parthenon</span><span class="logo logo--caps">OSC</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= NOSSA HISTÓRIA ================= -->
+  <section class="section section--historia" id="historia">
+    <div class="container historia">
+      <div class="historia__text reveal">
+        <span class="washi washi--green">Nossa história</span>
+        <h2 class="section__title">Presentes que entregam <em>afeto</em></h2>
+        <p>Desde 2020, desenhamos experiências em torno ou não da gastronomia e entregamos em formato de presentes únicos e personalizados. Produtos criados para entregar afetos e intenções, entregas que contam histórias, surpreendem e emocionam. <strong>Co-criamos, elaboramos e entregamos.</strong> Social e corporativo.</p>
+        <p>Nossa linha corporativa foi criada pensando em <strong>motivar pessoas, aumentar o engajamento e fortalecer as conexões</strong>.</p>
+      </div>
+      <div class="historia__stats">
+        <div class="hstat reveal" style="--d:0"><span class="hstat__num">2020</span><span class="hstat__label">criando experiências</span></div>
+        <div class="hstat reveal" style="--d:1"><span class="hstat__num">+20</span><span class="hstat__label">empresas atendidas</span></div>
+        <div class="hstat reveal" style="--d:2"><span class="hstat__num">+5</span><span class="hstat__label">anos de parcerias ativas</span></div>
+        <div class="hstat reveal" style="--d:3"><span class="hstat__num">100%</span><span class="hstat__label">personalizado</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROVA SOCIAL (depoimentos) ================= -->
+  <section class="section section--depoimentos" id="depoimentos">
+    <div class="container">
+      <div class="section__head reveal">
+        <span class="washi washi--lav">Depoimentos</span>
+        <h2 class="section__title">Quem recebeu, <em>conta melhor</em></h2>
+      </div>
+      <div class="depoimentos">
+        <!-- DEPOIMENTOS: são exemplos baseados no contexto. Confirmar/substituir com os reais da cliente antes de rodar tráfego! -->
+        <figure class="depo reveal" style="--d:0; --tilt:-1deg">
+          <blockquote>“As caixas chegaram impecáveis — cada colaborador se sentiu único. O cuidado nos detalhes transborda em cada embalagem.”</blockquote>
+          <figcaption><strong>Equipe de RH</strong><span>Cliente corporativa · São Paulo</span></figcaption>
+        </figure>
+        <figure class="depo reveal" style="--d:1; --tilt:1.2deg">
+          <blockquote>“Usamos os kits de onboarding e o impacto na recepção dos novos talentos foi imediato. Virou parte da nossa cultura.”</blockquote>
+          <figcaption><strong>Gente &amp; Gestão</strong><span>Cliente corporativa · Brasília</span></figcaption>
+        </figure>
+        <figure class="depo reveal" style="--d:2; --tilt:-1.2deg">
+          <blockquote>“Mais de 5 anos trabalhando juntos e cada projeto supera o anterior. Criativos, pontuais e um capricho sem igual.”</blockquote>
+          <figcaption><strong>Marketing</strong><span>Parceria desde 2021 · São Paulo</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
