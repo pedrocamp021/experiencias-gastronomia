@@ -372,6 +372,13 @@ section, header, footer { position: relative; z-index: 1; }
 .polaroid__caption { font-family: var(--font-hand2); font-size: 16px; color: var(--purple); padding: 8px 2px 4px; text-align: center; }
 
 @media (max-width: 860px) {
+  /* Bleed vertical: vídeo 120px mais alto que a tela, centrado —
+     cobre a área sob a barra de ferramentas inferior do navegador mobile */
+  .hero__video-el,
+  .hero__video-fallback {
+    top: -60px;
+    height: calc(100% + 120px);
+  }
   .oqf { grid-template-areas: "left" "torn" "photo"; gap: 34px; max-width: none; }
   .oqf__left { text-align: left; align-items: flex-start; }
   .section { padding: 64px 0; }
