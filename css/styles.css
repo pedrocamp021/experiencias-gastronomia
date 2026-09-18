@@ -151,9 +151,11 @@ section, header, footer { position: relative; z-index: 1; }
   background: var(--bg-sage);
 }
 .hero__video {
-  position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden;
-  /* container nunca encolhe: barra de endereço dinâmica revela, nunca puxa */
-  min-height: 100svh;
+  position: sticky;
+  top: 0;
+  top: calc((100svh - 100lvh) / 2); /* overscan: compensa a altura extra */
+  height: 100vh; height: 100svh; height: 100lvh; /* cobre até com barra de endereço recolhida */
+  overflow: hidden;
   background: var(--bg-sage);
 }
 .hero__video-el {
