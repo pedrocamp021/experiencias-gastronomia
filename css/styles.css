@@ -337,7 +337,7 @@ section, header, footer { position: relative; z-index: 1; }
 .oqf { display: grid; grid-template-columns: 1fr; grid-template-areas: "left" "photo" "torn"; gap: 44px; max-width: 900px; margin-inline: auto; }
 .oqf__left { grid-area: left; text-align: center; display: flex; flex-direction: column; align-items: center; }
 .oqf__right { display: contents; }
-.oqf__right .polaroid { grid-area: photo; }
+.oqf__right .polaroid { grid-area: photo; max-width: 520px; width: 100%; margin-inline: auto; box-sizing: border-box; }
 .oqf__right .torn { grid-area: torn; }
 .checklist { list-style: none; }
 .checklist li {
