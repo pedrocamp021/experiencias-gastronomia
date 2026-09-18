@@ -102,6 +102,33 @@ window.addEventListener('scroll', () => {
   const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const useAndroidFrames = androidDevice && typeof SPRITE !== 'undefined';
 
+  // FIX BARRA DINÂMICA DO NAVEGADOR MOBILE: quando a barra inferior/ superior
+  // some/ reaparece, a viewport visual muda de tamanho e o container 100svh/lvh
+  // pode sobrar curto (vazio embaixo). Medimos a viewport REAL e fixamos a
+  // altura do container em px, sempre cobrindo o máximo já visto nesta página.
+  const stage = video.parentElement; // .hero__video
+  if (stage && window.visualViewport) {
+    const fitViewport = () => {
+      const h = Math.max(
+        Math.round(window.visualViewport.height),
+        Math.round(parseFloat(stage.style.minHeight) || 0)
+      );
+      // nunca encolhe: guarda o maior valor já necessário nesta sessão
+      if (!stage.__maxH || h > stage.__maxH) {
+        stage.__maxH = h;
+        stage.style.height = h + 'px';
+      }
+    };
+    window.visualViewport.addEventListener('resize', fitViewport);
+    window.visualViewport.addEventListener('scroll', fitViewport);
+    window.addEventListener('orientationchange', () => {
+      stage.__maxH = 0; // rotação muda a geometria toda: recalcula do zero
+      fitViewport();
+    });
+    window.addEventListener('resize', fitViewport);
+    fitViewport();
+  }
+
   // ANDROID: caminho de SPRITE SHEET — 6 imagens grandes em vez de 96 requests
   if (useAndroidFrames && typeof SPRITE !== 'undefined') {
     (function androidSprite() {
