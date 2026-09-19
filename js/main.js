@@ -139,7 +139,7 @@ window.addEventListener('scroll', () => {
       if (fallback) fallback.style.display = 'none';
 
       const { files, cols, rows, per, total } = SPRITE;
-      const fw = 360, fh = 640;
+      const fw = 360, fh = 780;
       // pré-carrega TODAS as sheets em paralelo (não em fila) — o final da anima-
       // ção (sheets 03-05) fica disponível junto com o começo, sem travar o fim
       const sheets = files.map(f => { const im = new Image(); im.decoding = 'async'; im.fetchPriority = 'high'; im.src = f; return im; });
