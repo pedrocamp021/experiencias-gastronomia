@@ -176,9 +176,10 @@ window.addEventListener('scroll', () => {
   // mobile: 720x1280 (9:16) | desktop: 1920x816 (2.35:1)
   const src = (isIOS || androidDevice) ? 'video/hero-mobile-opt.mp4' : 'video/hero-desktop-opt.mp4';
   // poster por dispositivo: primeiro frame já visível enquanto o vídeo prepara
-  if (video.dataset.posterDesktop) {
-    video.poster = isIOS ? video.dataset.posterMobile : video.dataset.posterDesktop;
-  }
+    // (mobile p/ iPhone E Android; desktop só em telas largas de PC)
+    if (video.dataset.posterDesktop) {
+      video.poster = (isIOS || androidDevice) ? video.dataset.posterMobile : video.dataset.posterDesktop;
+    }
   video.src = src;
 
   let ready = false;
