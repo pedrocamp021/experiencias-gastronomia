@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Diagnóstico Hero</title>
+<style>
+  body { font-family: monospace; background: #111; color: #0f0; padding: 16px; font-size: 14px; overflow-wrap: break-word; }
+  h1 { color: #fff; font-size: 18px; }
+  .ok { color: #7f7; } .warn { color: #ff7; } .bad { color: #f77; }
+  div { margin: 6px 0; line-height: 1.5; }
+</style>
+</head>
+<body>
+<h1>📱 Diagnóstico da Hero</h1>
+<div id="out">coletando…</div>
+<script src="js/frames-android.js"></script>
+<script>
+(function(){
+  var lines = [];
+  function add(k, v, cls) { lines.push('<div class="' + (cls||'') + '"><b>' + k + ':</b> ' + v + '</div>'); }
+
+  var ua = navigator.userAgent || '';
+  add('UserAgent', ua.replace(/</g,'&lt;'));
+  add('É Android?', /Android/i.test(ua) ? 'SIM → usa SPRITE SHEETS' : 'não', /Android/i.test(ua) ? 'warn' : 'ok');
+  var isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  add('É iOS?', isIOS ? 'SIM → usa VÍDEO mobile' : 'não', isIOS ? 'warn' : 'ok');
+  add('SPRITE definido?', typeof SPRITE !== 'undefined' ? 'sim (frames-android.js carregou)' : 'NÃO — JS falhou!', typeof SPRITE !== 'undefined' ? 'ok' : 'bad');
+  if (typeof SPRITE !== 'undefined') add('SPRITE fh (altura do frame)', SPRITE.fh + 'px (esperado: 780)', SPRITE.fh === 780 ? 'ok' : 'bad');
+  add('visualViewport', window.visualViewport ? Math.round(window.visualViewport.width) + 'x' + Math.round(window.visualViewport.height) : 'não suportado');
+  add('window.innerWidth/Height', window.innerWidth + 'x' + window.innerHeight);
+  add('devicePixelRatio', window.devicePixelRatio);
+
+  var v = document.getElementById('probeVideo');
+  function videoInfo() {
+    if (!v) return;
+    add('Vídeo: currentSrc', (v.currentSrc || v.src || '-').split('/').pop());
+    add('Vídeo: dimensão do arquivo', v.videoWidth ? v.videoWidth + 'x' + v.videoHeight + ' (esperado 720x1280)' : 'ainda carregando…', (v.videoWidth === 720 && v.videoHeight === 1280) ? 'ok' : 'warn');
+    add('Vídeo: readyState/duration', v.readyState + ' / ' + (v.duration || 0).toFixed(2) + 's');
+    if (v.readyState >= 1) render();
+  }
+  function render(){ document.getElementById('out').innerHTML = lines.join(''); }
+  window.addEventListener('load', function(){
+    videoInfo();
+    var vc = document.createElement('div');
+    vc.className = 'warn';
+    vc.innerHTML = '<b>ATENÇÃO:</b> se "fh" não for 780, seu celular está com cache do JS antigo.<br>Se as dimensões do vídeo não forem 720x1280, cache do vídeo.';
+    lines.push(vc.outerHTML);
+    render();
+    setTimeout(function(){ videoInfo(); render(); }, 1500);
+  });
+})();
+</script>
+<video id="probeVideo" muted playsinline preload="auto" src="video/hero-mobile-opt.mp4"></video>
+</body>
+</html>
