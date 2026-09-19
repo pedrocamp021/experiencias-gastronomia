@@ -149,10 +149,13 @@ window.addEventListener('scroll', () => {
         const col = local % cols;
         const row = Math.floor(local / cols);
         stage.style.backgroundImage = 'url(' + files[sheetIdx] + ')';
+        stage.style.backgroundRepeat = 'no-repeat';
         // COVER de verdade (como object-fit: cover): escala a sheet inteira
-        // pelo maior fator e centraliza — nunca estica, qualquer proporção de tela
-        const sw = stage.clientWidth || window.innerWidth;
-        const sh = stage.clientHeight || window.innerHeight;
+        // pelo maior fator e centraliza — nunca estica, qualquer proporção de tela.
+        // Usa dimensões da JANELA: o stage é fullscreen e o clientHeight dele
+        // pode ser 0 na primeira pintura (o que virava mosaico duplicado).
+        const sw = window.innerWidth;
+        const sh = window.innerHeight;
         const scale = Math.max(sw / (cols * fw), sh / (rows * fh));
         const cellW = fw * scale, cellH = fh * scale;
         const ox = (cols * cellW - sw) / 2;
