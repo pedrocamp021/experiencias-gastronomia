@@ -95,12 +95,13 @@ window.addEventListener('scroll', () => {
   const fallback = document.getElementById('heroVideoFallback');
   if (!hero || !video) return;
 
-  // Detecção de plataforma: Android não faz seek de vídeo por hardware confiável
-  // (currentTime engasga). iPhone/PC têm decodificador dedicado e mantêm o vídeo.
+  // Detecção de plataforma: caminho Android (sprites) DESATIVADO — o vídeo
+  // scrubbed (keyframe a cada 2 frames, hardware decode) roda liso nos
+  // Androids modernos e as sheets davam mosaico/efeito quebrado em aparelho real.
   const ua = navigator.userAgent || '';
   const androidDevice = /Android/i.test(ua);
   const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const useAndroidFrames = androidDevice && typeof SPRITE !== 'undefined';
+  const useAndroidFrames = false;
 
   // FIX BARRA DINÂMICA DO NAVEGADOR MOBILE: quando a barra inferior/ superior
   // some/ reaparece, a viewport visual muda de tamanho e o container 100svh/lvh
@@ -171,8 +172,9 @@ window.addEventListener('scroll', () => {
     return; // não inicializa o caminho de vídeo
   }
 
-  // iPhone / PC: vídeo scrubbed (qualidade máxima)
-  const src = isIOS ? 'video/hero-mobile-opt.mp4' : 'video/hero-desktop-opt.mp4';
+  // iPhone / Android / PC: vídeo scrubbed (qualidade máxima)
+  // mobile: 720x1280 (9:16) | desktop: 1920x816 (2.35:1)
+  const src = (isIOS || androidDevice) ? 'video/hero-mobile-opt.mp4' : 'video/hero-desktop-opt.mp4';
   // poster por dispositivo: primeiro frame já visível enquanto o vídeo prepara
   if (video.dataset.posterDesktop) {
     video.poster = isIOS ? video.dataset.posterMobile : video.dataset.posterDesktop;
