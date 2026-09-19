@@ -151,10 +151,8 @@ section, header, footer { position: relative; z-index: 1; }
   background: var(--bg-sage);
 }
 .hero__video {
-  position: sticky;
-  top: 0;
-  top: calc((100svh - 100lvh) / 2); /* overscan: compensa a altura extra */
-  height: 100vh; height: 100svh; height: 100lvh; /* cobre até com barra de endereço recolhida */
+  position: sticky; top: 0;
+  height: 100vh; /* vh = viewport com barra recolhida (maior) — estático, sem jank */
   overflow: hidden;
   background: var(--bg-sage);
 }

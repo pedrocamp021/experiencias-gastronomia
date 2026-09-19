@@ -107,18 +107,9 @@ window.addEventListener('scroll', () => {
   // pode sobrar curto (vazio embaixo). Medimos a viewport REAL e fixamos a
   // altura do container em px, sempre cobrindo o máximo já visto nesta página.
   const stage = video.parentElement; // .hero__video
-  if (stage && window.visualViewport) {
-    const fitViewport = () => {
-      // altura SEMPRE igual à viewport visível atual: acompanha a barra
-      // do navegador sumir/aparecer, sem "memória" de altura máxima
-      stage.style.height = Math.round(window.visualViewport.height) + 'px';
-    };
-    window.visualViewport.addEventListener('resize', fitViewport);
-    window.visualViewport.addEventListener('scroll', fitViewport);
-    window.addEventListener('orientationchange', () => setTimeout(fitViewport, 300));
-    window.addEventListener('resize', fitViewport);
-    fitViewport();
-  }
+  // CORREÇÃO: sem JS de viewport. A altura 100vh estática do container
+  // já cobre a tela com a barra recolhida; ajustes em px durante o scroll
+  // causavam reflow contínuo (esticada + brexa).
 
   // ANDROID: caminho de SPRITE SHEET — 6 imagens grandes em vez de 96 requests
   if (useAndroidFrames && typeof SPRITE !== 'undefined') {
