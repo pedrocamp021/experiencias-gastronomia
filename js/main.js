@@ -109,22 +109,13 @@ window.addEventListener('scroll', () => {
   const stage = video.parentElement; // .hero__video
   if (stage && window.visualViewport) {
     const fitViewport = () => {
-      const h = Math.max(
-        Math.round(window.visualViewport.height),
-        Math.round(parseFloat(stage.style.minHeight) || 0)
-      );
-      // nunca encolhe: guarda o maior valor já necessário nesta sessão
-      if (!stage.__maxH || h > stage.__maxH) {
-        stage.__maxH = h;
-        stage.style.height = h + 'px';
-      }
+      // altura SEMPRE igual à viewport visível atual: acompanha a barra
+      // do navegador sumir/aparecer, sem "memória" de altura máxima
+      stage.style.height = Math.round(window.visualViewport.height) + 'px';
     };
     window.visualViewport.addEventListener('resize', fitViewport);
     window.visualViewport.addEventListener('scroll', fitViewport);
-    window.addEventListener('orientationchange', () => {
-      stage.__maxH = 0; // rotação muda a geometria toda: recalcula do zero
-      fitViewport();
-    });
+    window.addEventListener('orientationchange', () => setTimeout(fitViewport, 300));
     window.addEventListener('resize', fitViewport);
     fitViewport();
   }
@@ -139,7 +130,7 @@ window.addEventListener('scroll', () => {
       if (fallback) fallback.style.display = 'none';
 
       const { files, cols, rows, per, total } = SPRITE;
-      const fw = 360, fh = 780;
+      const fw = 360, fh = 640;
       // pré-carrega TODAS as sheets em paralelo (não em fila) — o final da anima-
       // ção (sheets 03-05) fica disponível junto com o começo, sem travar o fim
       const sheets = files.map(f => { const im = new Image(); im.decoding = 'async'; im.fetchPriority = 'high'; im.src = f; return im; });
@@ -167,8 +158,16 @@ window.addEventListener('scroll', () => {
         const col = local % cols;
         const row = Math.floor(local / cols);
         stage.style.backgroundImage = 'url(' + files[sheetIdx] + ')';
-        stage.style.backgroundSize = (cols * 100) + '% ' + (rows * 100) + '%';
-        stage.style.backgroundPosition = (cols > 1 ? (col / (cols - 1)) * 100 : 0) + '% ' + (rows > 1 ? (row / (rows - 1)) * 100 : 0) + '%';
+        // COVER de verdade (como object-fit: cover): escala a sheet inteira
+        // pelo maior fator e centraliza — nunca estica, qualquer proporção de tela
+        const sw = stage.clientWidth || window.innerWidth;
+        const sh = stage.clientHeight || window.innerHeight;
+        const scale = Math.max(sw / (cols * fw), sh / (rows * fh));
+        const cellW = fw * scale, cellH = fh * scale;
+        const ox = (cols * cellW - sw) / 2;
+        const oy = (rows * cellH - sh) / 2;
+        stage.style.backgroundSize = (cols * cellW) + 'px ' + (rows * cellH) + 'px';
+        stage.style.backgroundPosition = (col * cellW - ox) + 'px ' + (row * cellH - oy) + 'px';
       }
       window.__frameUpdate = updateA;
       window.addEventListener('scroll', updateA, { passive: true });

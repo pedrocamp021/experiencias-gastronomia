@@ -7,5 +7,5 @@ const SPRITE = {
   per: 16,
   total: 96,
   fw: 360,
-  fh: 780
+  fh: 640
 };
