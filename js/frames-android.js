@@ -1,4 +1,4 @@
-// Sprite sheet ANDROID: 6 imagens de 16 frames (4x4), 360x720 por frame
+// Sprite sheet ANDROID: 6 imagens de 16 frames (4x4), 360x640 por frame (9:16 nativo)
 // Trocar backgroundImage com background-position = ZERO requests extras em runtime
 const SPRITE = {
   files: ['img/frames-sprite/sheet00.jpg','img/frames-sprite/sheet01.jpg','img/frames-sprite/sheet02.jpg','img/frames-sprite/sheet03.jpg','img/frames-sprite/sheet04.jpg','img/frames-sprite/sheet05.jpg'],
@@ -7,5 +7,5 @@ const SPRITE = {
   per: 16,
   total: 96,
   fw: 360,
-  fh: 720
+  fh: 640
 };

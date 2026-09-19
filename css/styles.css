@@ -379,6 +379,7 @@ section, header, footer { position: relative; z-index: 1; }
     top: -60px;
     height: calc(100% + 120px);
   }
+  .hero__video-el { object-position: center; }
   .oqf { grid-template-areas: "left" "torn" "photo"; gap: 34px; max-width: none; }
   .oqf__left { text-align: left; align-items: flex-start; }
   .section { padding: 64px 0; }
